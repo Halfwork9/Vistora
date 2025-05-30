@@ -21,7 +21,7 @@ const Login = () => {
     <Card className="md:w-[400px] sm:w-[300px] m-auto mt-5">
       <CardHeader>
         <CardTitle>Enter Email to get OTP</CardTitle>
-        <CardDescription>If you have already got OTP on mail then you can directly go to OTP tab</CardDescription>
+        <CardDescription>You will receive an OTP on your email. Use it to proceed with verification.</CardDescription>
 
       </CardHeader>
       <CardContent className="space-y-2">
