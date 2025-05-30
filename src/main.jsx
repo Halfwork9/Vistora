@@ -8,7 +8,7 @@ import { ProductProvider } from './context/ProductContext'
 import { CartProvider } from './context/CartContext'
 
 
-export const server = "http://localhost:5000";
+export const server = "https://vistora-backend-2.onrender.com";
 
 export const categories = [
   "Smartphone", "Laptop", "Tablet", "Television", "Camera", "Headphones", "Gaming Console", "Smartwatch", "Power Bank", "Monitor",
