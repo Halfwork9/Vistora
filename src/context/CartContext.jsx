@@ -7,17 +7,19 @@ import toast from "react-hot-toast";
 const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
-  const token = Cookies.get("token");
   const [loading, setLoading] = useState(false);
   const [totalItem, setTotalItem] = useState(0);
   const [subTotal, setSubTotal] = useState(0);
- 
   const [cart, setCart] = useState([]);
+
   async function fetchCart() {
+    const currentToken = Cookies.get("token");
+    if (!currentToken || currentToken === "null") return; // Don't fetch if not logged in
+
     try {
       const { data } = await axios.get(`${server}/api/cart/all`, {
         headers: {
-          token: Cookies.get("token"),
+          token: currentToken,
         },
       });
 
@@ -25,7 +27,7 @@ export const CartProvider = ({ children }) => {
       setTotalItem(data.sumofQuantity);
       setSubTotal(data.subTotal);
     } catch (error) {
-      console.log(error);
+      console.log("Fetch Cart Error:", error);
     }
   }
 
@@ -36,7 +38,7 @@ export const CartProvider = ({ children }) => {
         { product },
         {
           headers: {
-            token,
+            token: Cookies.get("token"), // ✅ Dynamic: Fetches the absolute latest token
           },
         }
       );
@@ -44,25 +46,25 @@ export const CartProvider = ({ children }) => {
       toast.success(data.message);
       fetchCart();
     } catch (error) {
-      toast.error(error.response.data.message);
+      toast.error(error.response?.data?.message || "Error adding to cart");
     }
   }
 
-  async function updateCart(action , id) {
+  async function updateCart(action, id) {
     try {
       const { data } = await axios.post(
         `${server}/api/cart/update?action=${action}`,
         { id },
         {
           headers: {
-            token,
+            token: Cookies.get("token"), // ✅ Dynamic
           },
         }
       );
 
       fetchCart();
     } catch (error) {
-      toast.error(error.response.data.message);
+      toast.error(error.response?.data?.message || "Error updating cart");
     }
   }
 
@@ -70,20 +72,21 @@ export const CartProvider = ({ children }) => {
     try {
       const { data } = await axios.get(`${server}/api/cart/remove/${id}`, {
         headers: {
-          token,
+          token: Cookies.get("token"), // ✅ Dynamic
         },
       });
 
       toast.success(data.message);
       fetchCart();
     } catch (error) {
-      toast.error(error.response.data.message);
+      toast.error(error.response?.data?.message || "Error removing from cart");
     }
   }
 
   useEffect(() => {
     fetchCart();
   }, []);
+
   return (
     <CartContext.Provider
       value={{
