@@ -82,7 +82,7 @@ async function fetchUser() {
 }
 
 function logoutUser(navigate, setTotalItem){
-  Cookies.set("token" , null);
+  Cookies.remove("token");
   setuser([]);
   setIsAuth(false);
   navigate("/login");
